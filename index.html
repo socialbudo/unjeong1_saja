@@ -209,3 +209,723 @@
       width: 100%;
       padding: 16px;
       border: none;
+      border-radius: 14px;
+      background-color: var(--primary-color);
+      color: white;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+      transition: background-color 0.2s;
+      margin-top: 10px;
+    }
+
+    .start-btn:active {
+      background-color: var(--primary-hover);
+    }
+
+    /* Screen: Quiz */
+    #screen-quiz {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 6px;
+      background-color: #e2e8f0;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background-color: var(--primary-color);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .quiz-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .badge-initial {
+      background-color: #e0e7ff;
+      color: #4338ca;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+
+    .quiz-count {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-sub);
+    }
+
+    .quiz-card {
+      flex: 1;
+      background-color: var(--card-bg);
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .star-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #cbd5e1;
+      transition: color 0.2s;
+    }
+
+    .star-btn.active {
+      color: var(--star-active);
+    }
+
+    .mean-text {
+      font-size: 1.25rem;
+      font-weight: 700;
+      line-height: 1.5;
+      color: var(--text-main);
+      word-break: keep-all;
+    }
+
+    /* Answer Area */
+    .answer-display {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 2px dashed var(--border-color);
+      width: 100%;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .answer-display.show {
+      display: flex;
+    }
+
+    .answer-word {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--primary-color);
+    }
+
+    .answer-hanja {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text-sub);
+      letter-spacing: 2px;
+    }
+
+    /* Inputs */
+    .input-group {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .quiz-input {
+      flex: 1;
+      padding: 14px 16px;
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      outline: none;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+
+    .quiz-input:focus {
+      border-color: var(--primary-color);
+    }
+
+    .quiz-input.correct {
+      border-color: var(--correct-color);
+      background-color: #f0fdf4;
+      color: var(--correct-color);
+    }
+
+    .quiz-input.incorrect {
+      border-color: var(--incorrect-color);
+      background-color: #fef2f2;
+      color: var(--incorrect-color);
+    }
+
+    .submit-btn {
+      padding: 0 20px;
+      border: none;
+      border-radius: 12px;
+      background-color: var(--primary-color);
+      color: white;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .nav-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .nav-btn {
+      flex: 1;
+      padding: 14px;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      background-color: var(--card-bg);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-main);
+      cursor: pointer;
+    }
+
+    .nav-btn.primary {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+    }
+
+    .tip-banner {
+      font-size: 0.75rem;
+      color: var(--text-sub);
+      text-align: center;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header>
+      <span class="maker-tag">운정고 1학년</span>
+      <h1 class="app-title">기출 한자성어 퀴즈</h1>
+      <button id="exit-btn" class="header-btn" style="display: none;">그만하기</button>
+    </header>
+
+    <!-- Main Content Area -->
+    <div class="content-area">
+      <!-- Screen 1: Setup -->
+      <div id="screen-setup">
+        <div>
+          <div class="section-title">
+            <span>초성 선택 (Day)</span>
+            <button id="toggle-all-initials" class="toggle-all-btn">모두 해제</button>
+          </div>
+          <div id="initial-grid" class="initial-grid"></div>
+        </div>
+
+        <div>
+          <div class="section-title">학습 범위</div>
+          <div class="option-group" id="range-options">
+            <button class="option-btn active" data-value="all">전체 성어</button>
+            <button class="option-btn" data-value="star">⭐️ 즐겨찾기</button>
+            <button class="option-btn" data-value="wrong">❌ 오답노트</button>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-title">퀴즈 모드</div>
+          <div class="option-group" id="mode-options">
+            <button class="option-btn active" data-value="test">⌨️ 타이핑 시험</button>
+            <button class="option-btn" data-value="swipe">👆 스와이프 (훑어보기)</button>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-title">정렬 방식</div>
+          <div class="option-group" id="sort-options">
+            <button class="option-btn active" data-value="shuffle">🔀 무작위 섞기</button>
+            <button class="option-btn" data-value="order">순서대로</button>
+          </div>
+        </div>
+
+        <button id="start-btn" class="start-btn">퀴즈 시작하기</button>
+      </div>
+
+      <!-- Screen 2: Quiz -->
+      <div id="screen-quiz">
+        <div class="progress-bar-container">
+          <div id="progress-bar" class="progress-bar"></div>
+        </div>
+
+        <div class="quiz-info">
+          <span id="badge-initial" class="badge-initial">ㄱ</span>
+          <span id="quiz-count" class="quiz-count">1 / 10</span>
+        </div>
+
+        <div class="quiz-card" id="quiz-card">
+          <button id="star-btn" class="star-btn">★</button>
+          <div id="mean-text" class="mean-text">문제 뜻이 여기에 들어갑니다.</div>
+          
+          <div id="answer-display" class="answer-display">
+            <div id="answer-word" class="answer-word">고진감래</div>
+            <div id="answer-hanja" class="answer-hanja">苦盡甘來</div>
+          </div>
+        </div>
+
+        <!-- Input Area for Test Mode -->
+        <div id="input-container">
+          <div class="input-group">
+            <input type="text" id="quiz-input" class="quiz-input" placeholder="한글 음 입력 (예: 고진감래)" autocomplete="off">
+            <button id="submit-btn" class="submit-btn">확인</button>
+          </div>
+          <div class="tip-banner">💡 [Enter] 누르면 즉시 채점 후 다음 문제로 넘어갑니다.</div>
+        </div>
+
+        <!-- Navigation Buttons for Swipe Mode -->
+        <div id="nav-container" class="nav-group" style="display: none;">
+          <button id="prev-btn" class="nav-btn">← 이전</button>
+          <button id="reveal-btn" class="nav-btn">정답 확인</button>
+          <button id="next-btn" class="nav-btn primary">다음 →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 100 한자성어 원본 데이터 셋
+    const rawVocabularyData = [
+      { id: 1, initial: "ㄱ", word: "가렴주구", hanja: "苛斂誅求", rawMean: "가혹하게 세금을 거두거나 백성의 재물을 억지로 뺏음" },
+      { id: 2, initial: "ㄱ", word: "각골난망", hanja: "刻骨難忘", rawMean: "뼈에 새겨 놓을 만큼 잊을 수 없고 고통스러운 원한" },
+      { id: 3, initial: "ㄱ", word: "감언이설", hanja: "甘言利說", rawMean: "달콤한 말과 이득을 내세워 속이는 말" },
+      { id: 4, initial: "ㄱ", word: "감탄고토", hanja: "甘呑苦吐", rawMean: "달면 삼키고 쓴면 뱉는다는 뜻으로, 비위에 맞으면 좋아하고 맞지 않으면 싫어한다는 의미" },
+      { id: 5, initial: "ㄱ", word: "갑론을박", hanja: "甲論乙駁", rawMean: "갑이 논하면 을이 논박한다는 뜻으로, 서로 논란하고 반박함을 이르는 말" },
+      { id: 6, initial: "ㄱ", word: "고립무원", hanja: "孤立無援", rawMean: "고립되어 도움을 받을 데가 없음" },
+      { id: 7, initial: "ㄱ", word: "고진감래", hanja: "苦盡甘來", rawMean: "쓴 것이 다하면 단 것이 온다. 고생 끝에 낙이 온다는 뜻" },
+      { id: 8, initial: "ㄱ", word: "괄목상대", hanja: "刮目相對", rawMean: "눈을 비비고 상대를 대한다는 뜻. 남의 학식이나 재주가 놀라운 정도로 부쩍 향상됨을 뜻함" },
+      { id: 9, initial: "ㄱ", word: "구사일생", hanja: "九死一生", rawMean: "구사일생 죽을 고비를 여러 차례 넘기고 겨우 살아남음을 이르는 말" },
+      { id: 10, initial: "ㄱ", word: "구우일모", hanja: "九牛一毛", rawMean: "아홉 마리 소에 털 한 가닥이 빠진 정도라는 뜻으로, 아주 큰 물건 속에 있는 아주 작은 물건, 대단히 많은 것 중의 아주 적은 것의 비유" },
+      { id: 11, initial: "ㄱ", word: "견강부회", hanja: "牽強附會", rawMean: "이치에 맞지 않는 말을 억지로 끌어 붙여 자기의 주장에 맞도록 함" },
+      { id: 12, initial: "ㄱ", word: "결초보은", hanja: "結草報恩", rawMean: "무슨 짓을 해서든지 잊지 않고 은혜에 보답함" },
+      { id: 13, initial: "ㄱ", word: "경거망동", hanja: "輕擧妄動", rawMean: "가볍고 망령되게 행동한다는 뜻" },
+      { id: 14, initial: "ㄱ", word: "권불십년", hanja: "權不十年", rawMean: "아무리 막강한 권력도 10년 못 간다. 영원할 것 같지만 오래가지 못해 결국은 무너진다는 의미" },
+      { id: 15, initial: "ㄱ", word: "기사회생", hanja: "起死回生", rawMean: "죽을 고비에서 벗어나 다시 살아남" },
+      { id: 16, initial: "ㄱ", word: "기호지세", hanja: "騎虎之勢", rawMean: "범에 올라탄 기세, 즉 이미 시작한 일이라 도중에 그만둘 수 없는 상황" },
+      { id: 17, initial: "ㄴ", word: "내우외환", hanja: "內憂外患", rawMean: "'내부에서 일어나는 근심과 외부로부터 받는 근심'이란 뜻으로, 나라 안팎의 여러 가지 근심 걱정을 이르는 말" },
+      { id: 18, initial: "ㄴ", word: "노심초사", hanja: "勞心焦思", rawMean: "몹시 마음을 쓰며 애를 태움" },
+      { id: 19, initial: "ㄷ", word: "대경실색", hanja: "大驚失色", rawMean: "크게 놀라 얼굴빛을 잃는다는 뜻으로 낯빛이 하얗게 질릴 정도로 몹시 놀란 모습을 이룸" },
+      { id: 20, initial: "ㄷ", word: "동문서답", hanja: "東問西答", rawMean: "동쪽을 묻자 서쪽을 답한다. 묻는 말에 대하여 전혀 엉뚱한 대답을 가리키는 말" },
+      { id: 21, initial: "ㄷ", word: "동병상련", hanja: "同病相憐", rawMean: "같은 병자끼리 가엾게 여긴다는 뜻. 어려운 처지에 있는 사람끼리 서로 불쌍히 여겨 동장하고 서로 도움" },
+      { id: 22, initial: "ㄷ", word: "동분서주", hanja: "東奔西走", rawMean: "동쪽으로 뛰고 서쪽으로 뛴다는 뜻으로, 이리저리 몹시 바쁘게 돌아다님" },
+      { id: 23, initial: "ㄷ", word: "동상이몽", hanja: "同床異夢", rawMean: "같은 자리에 자면서 다른 꿈을 꾼다. 겉으로는 같이 행동하면서 속으로는 다른 생각을 하는 것" },
+      { id: 24, initial: "ㄷ", word: "두문불출", hanja: "杜門不出", rawMean: "문을 닫고 밖으로 나가치 않음, 즉 집에서만 박혀 있으면서 결코 바깥출입을 하지 않는 모습" },
+      { id: 25, initial: "ㅁ", word: "마이동풍", hanja: "馬耳東風", rawMean: "남의 비평이나 의견을 조금도 귀담아 듣지 아니하고 흘려버림을 이룸" },
+      { id: 26, initial: "ㅁ", word: "망양지탄", hanja: "亡羊之歎", rawMean: "달아난 양을 찾다가 여러 갈래의 길 앞에서 길을 잃었다는 의미. 방침이 많아 할 바를 모르게 됨" },
+      { id: 27, initial: "ㅁ", word: "맥수지탄", hanja: "麥秀之歎", rawMean: "고국의 멸망을 안타까워함" },
+      { id: 28, initial: "ㅁ", word: "무위도식", hanja: "無爲徒食", rawMean: "하는 일 없이 헛되이 먹기만 함" },
+      { id: 29, initial: "ㅁ", word: "면종복배", hanja: "面從腹背", rawMean: "겉으로는 순종하는 체하고 속으로는 딴 마음을 먹음" },
+      { id: 30, initial: "ㅁ", word: "명재경각", hanja: "命在頃刻", rawMean: "목숨이 경각에 달려 있음. 즉 목숨이 눈 깜짝할 사이에 사라질 수도 있는 위험한 상황" },
+      { id: 31, initial: "ㅂ", word: "독불인견", hanja: "目不忍見", rawMean: "눈으로 볼 수 없을 정도로 비참하거나 안타까운 모습" },
+      { id: 32, initial: "ㅂ", word: "반신반의", hanja: "半信半疑", rawMean: "믿으면서도 한편으로는 의심함" },
+      { id: 33, initial: "ㅂ", word: "방약무인", hanja: "傍若無人", rawMean: "곁에 사람이 없는 것처럼 행동함. 즉 주위 사람을 의식하지 않고 제멋대로 행동하는 것" },
+      { id: 34, initial: "ㅂ", word: "백년하청", hanja: "百年河清", rawMean: "백 년을 기다린다 해도 황하의 흐린 물은 맑아지지 않는다는 뜻으로 오랫동안 기다려도 바라는 것이 이루어질 수 없음을 이르는 말" },
+      { id: 35, initial: "ㅂ", word: "백척간두", hanja: "百尺竿頭", rawMean: "백 척 되는 장대의 꼭대기. 그런 곳에 매달려 있을 정도로 위급하고 어려운 상황" },
+      { id: 36, initial: "ㅂ", word: "부화뇌동", hanja: "附和雷同", rawMean: "우뢰 소리에 맞춰 함께한다는 뜻으로, 자신의 뚜렷한 소신 없이 그저 남이 하는 대로 따라가는 것을 의미함" },
+      { id: 37, initial: "ㅂ", word: "분기탱천", hanja: "憤氣撐天", rawMean: "분한 마음이 하늘을 찌를 듯 격렬하게 북받쳐 오름" },
+      { id: 38, initial: "ㅂ", word: "비분강개", hanja: "悲憤慷慨", rawMean: "슬프고 분한 느낌이 마음 속에 가득 차 있음" },
+      { id: 39, initial: "ㅅ", word: "사고무친", hanja: "四顧無親", rawMean: "사방을 둘러봐도 의지할만한 사람이 도무지 없다는 뜻" },
+      { id: 40, initial: "ㅅ", word: "사면초가", hanja: "四面楚歌", rawMean: "사방에서 들려오는 초나라 노래라는 뜻으로, 적에게 포위되거나 몹시 어려운 일을 당하여 극복할 방법이 전혀 없는 곤경" },
+      { id: 41, initial: "ㅅ", word: "사필귀정", hanja: "事必歸正", rawMean: "처음에는 시비곡직을 가리지 못하여 그릇되더라도 모든 일은 결국에 가서는 반드시 정리로 돌아감. 결국 모든 일은 바른 결과로 돌아간다는 의미" },
+      { id: 42, initial: "ㅅ", word: "삼고초려", hanja: "三顧草廬", rawMean: "초가집을 세 번 찾아감. 훌륭한 인물을 모시기 위해 최선을 다하는 모습" },
+      { id: 43, initial: "ㅅ", word: "삼십육계", hanja: "三十六計", rawMean: "도망가야 할 때에는 기회를 보고 무조건 도망을 쳐서 몸을 안전하게 하는 일이 병법상의 최상책이라는 뜻" },
+      { id: 44, initial: "ㅅ", word: "상전벽해", hanja: "桑田碧海", rawMean: "뽕나무밭이 푸른 바다가 되었다라는 뜻으로, 세상이 몰라 볼 정도로 바뀐 것. 세상의 모든 일이 엄청나게 변해버린 것" },
+      { id: 45, initial: "ㅅ", word: "새옹지마", hanja: "塞翁之馬", rawMean: "세상의 변수가 많아 어느 것이 화가 되고 어느 것이 복이 될지 예측하기가 어려워 재앙도 슬퍼할 게 못되고 복도 기뻐할 것이 아님을 이름" },
+      { id: 46, initial: "ㅅ", word: "선견지명", hanja: "先見之明", rawMean: "미래에 전개될 일을 남보다 먼저 예견하는 총명함" },
+      { id: 47, initial: "ㅅ", word: "설상가상", hanja: "雪上加霜", rawMean: "눈 위에 또 서리가 내린다. 어려운 일이 겹침을 이름 또는 '환난이 거듭됨'을 비유하여 이르는 말" },
+      { id: 48, initial: "ㅅ", word: "설왕설래", hanja: "說往說來", rawMean: "말들이 왔다 갔다 함. 즉 의견이나 입장이 달라 말로 옥신각신하는 모습" },
+      { id: 49, initial: "ㅅ", word: "수구초심", hanja: "首丘初心", rawMean: "여우가 죽을 때 제가 살던 언덕으로 머리를 둔다는 뜻으로 고향이나 근본을 잊지 않는다는 의미" },
+      { id: 50, initial: "ㅅ", word: "수주대토", hanja: "守株待兔", rawMean: "나무 그루터기를 지키며 토끼를 기다린다는 뜻으로, 실효성 없는 기대는 공연히 시간만 허비하고, 우둔한 행운 또는 불로소득을 기대하는 어리석음" },
+      { id: 51, initial: "ㅅ", word: "순망치한", hanja: "脣亡齒寒", rawMean: "입술이 없으면 이가 시리다는 말로 서로 떨어질 수 없는 밀접한 관계" },
+      { id: 52, initial: "ㅅ", word: "식자우환", hanja: "識字憂患", rawMean: "글자를 아는 것이 오히려 걱정을 끼친다는 발. 너무 많이 알기 때문에 쓸데없는 걱정도 그만큼 많다" },
+      { id: 53, initial: "ㅇ", word: "아전인수", hanja: "我田引水", rawMean: "자기 논에 물 대기라는 뜻으로 자기에게만 이롭게 되도록 생각하거나 행동함을 이르는 말" },
+      { id: 54, initial: "ㅇ", word: "안빈낙도", hanja: "安貧樂道", rawMean: "자기 분수에 만족하여 다른데 마음을 두지 아니함" },
+      { id: 55, initial: "ㅇ", word: "안하무인", hanja: "眼下無人", rawMean: "눈 아래에 사람이 없다는 뜻으로, 사람들이 교만하여 남을 업신여김을 이르는 말" },
+      { id: 56, initial: "ㅇ", word: "어불성설", hanja: "語不成說", rawMean: "말이 이치를 이루지 못하다. 즉 말이 전혀 사리에 맞지 않음" },
+      { id: 57, initial: "ㅇ", word: "연목구어", hanja: "緣木求魚", rawMean: "나무에서 물고기를 구한다는 의미로, 목적과 수단이 일치하지 않아 성공이 불가능함" },
+      { id: 58, initial: "ㅇ", word: "오리무중", hanja: "五里霧中", rawMean: "무슨 일에 대하여 방향이나 상황을 알 길이 없음. 일의 갈피를 잡기 어려움" },
+      { id: 59, initial: "ㅇ", word: "오매불망", hanja: "寤寐不忘", rawMean: "자나 깨나 잊지 못함. 사랑하는 사람을 그리워하여 잠 못 들거나 근심 또는 생각이 많아 잠 못 드는 것" },
+      { id: 60, initial: "ㅇ", word: "오월동주", hanja: "吳越同舟", rawMean: "서로 미워하면서도 공통의 어려움이나 이해에 대해서는 협력하는 경우를 비유하는 말" },
+      { id: 61, initial: "ㅇ", word: "온고지신", hanja: "溫故知新", rawMean: "옛것을 익히고 그것을 미루어서 새로운 것을 앎. 온고이지신과 같은 의미" },
+      { id: 62, initial: "ㅇ", word: "우후죽순", hanja: "雨後竹筍", rawMean: "비가 온 뒤에 솟는 죽순이라는 뜻으로, 어떤 일이 일시에 많이 일어남을 이르는 말" },
+      { id: 63, initial: "ㅇ", word: "유구무언", hanja: "有口無言", rawMean: "입은 있으나 할 말이 없음. 잘못이 분명해 변명하거나 해명할 길이 없음" },
+      { id: 64, initial: "ㅇ", word: "이심전심", hanja: "以心傳心", rawMean: "마음과 마음으로 서로 뜻이 통함. 문자나 언어 없이 남을 깨닫게 한다는 말" },
+      { id: 65, initial: "ㅇ", word: "일거양득", hanja: "一擧兩得", rawMean: "한가지의 일로 두가지의 이득을 보는 것" },
+      { id: 66, initial: "ㅇ", word: "일벌백계", hanja: "一罰百戒", rawMean: "한 사람을 벌함으로써, 만인에게 경계가 되도록 한다는 뜻" },
+      { id: 67, initial: "ㅇ", word: "일장춘몽", hanja: "一場春夢", rawMean: "인생의 허무함을 한바탕의 봄꿈에 비유하여 이르는 말" },
+      { id: 68, initial: "ㅇ", word: "일진일퇴", hanja: "一進一退", rawMean: "한 번 나아감과 물러섬. 좋아졌다 나빠졌다 함" },
+      { id: 69, initial: "ㅇ", word: "일희일비", hanja: "一喜一悲", rawMean: "한편으로는 기뻐하고 한편으로는 슬퍼함. 또는 기쁨과 슬픔이 번갈아 일어남" },
+      { id: 70, initial: "ㅈ", word: "자가당착", hanja: "自家撞着", rawMean: "스스로 부딪치기도 하고 불기도 함. 한 사람의 말과 행동이 서로 앞뒤가 맞지 않는 모습" },
+      { id: 71, initial: "ㅈ", word: "자승자박", hanja: "自繩自縛", rawMean: "자기가 자기를 망치게 한다는 뜻. 즉, 자기 언행으로 인해 자신이 꼼짝 못하게 되는 일" },
+      { id: 72, initial: "ㅈ", word: "적반하장", hanja: "賊反荷杖", rawMean: "도둑이 도리어 몽둥이를 든다는 뜻. 잘못한 사람이 도리어 잘한 사람을 나무라는 경우" },
+      { id: 73, initial: "ㅈ", word: "전인미답", hanja: "前人未踏", rawMean: "지금까지 아무도 손을 대거나 발을 디딘 일이 없음" },
+      { id: 74, initial: "ㅈ", word: "전전긍긍", hanja: "戰戰兢兢", rawMean: "어떤 위기감에 떠는 심정을 비유하는 말" },
+      { id: 75, initial: "ㅈ", word: "전전반측", hanja: "輾轉反側", rawMean: "수레바퀴가 한없이 돌며 옆으로 뒤척인다. 근심과 걱정으로 잠을 이루지 못함을 비유하는 말" },
+      { id: 76, initial: "ㅈ", word: "전화위복", hanja: "轉禍爲福", rawMean: "화가 바뀌어 오히려 복이 된다는 뜻으로 어떤 불행한 일이라도 끊임없는 노력과 강인한 의지로 힘쓰면 불행을 행복으로 바꾸어 놓을 수 있다는 말" },
+      { id: 77, initial: "ㅈ", word: "절치부심", hanja: "切齒腐心", rawMean: "이를 갈고 마음을 썩힌다는 뜻으로, 대단히 분하게 여기고 마음을 썩임" },
+      { id: 78, initial: "ㅈ", word: "점입가경", hanja: "漸入佳境", rawMean: "가면 갈수록 경치가 더해진다. 일이 점점 더 재미있는 지경으로 돌아가는 것을 비유하는 말" },
+      { id: 79, initial: "ㅈ", word: "조삼모사", hanja: "朝三暮四", rawMean: "간사한 꾀로 남을 속여 희롱함을 이르는 말" },
+      { id: 80, initial: "ㅈ", word: "좌불안석", hanja: "坐不安席", rawMean: "마음이 불안하거나 걱정스러워서 한곳에 가만히 앉아 있지 못하고 안절부절못하는 모양" },
+      { id: 81, initial: "ㅈ", word: "중구난방", hanja: "衆口難防", rawMean: "여러 사람이 각기 말하는 의견이 붓물 터지듯 쏟아져 나오" },
+      { id: 82, initial: "ㅈ", word: "진퇴양난", hanja: "進退兩難", rawMean: "나아갈 수도 물러설 수도 없는 궁지에 빠짐" },
+      { id: 83, initial: "ㅈ", word: "진퇴유곡", hanja: "進退維谷", rawMean: "앞으로도 뒤로도 나아가거나 물러서지 못한다는 뜻" },
+      { id: 84, initial: "ㅊ", word: "천우신조", hanja: "天佑神助", rawMean: "도저히 이루어질 수 없다고 여긴 일이 이루어지거나, 힘든 상황에서 극적으로 벗어나는 경우" },
+      { id: 85, initial: "ㅊ", word: "청천벽력", hanja: "青天霹靂", rawMean: "맑게 갠 하늘에서 갑자기 떨어지는 벼락이라는 뜻으로 돌발적인 사태나 사변을 이르는 말" },
+      { id: 86, initial: "ㅊ", word: "청출어람", hanja: "青出於藍", rawMean: "제자가 스승보다 나은 것을 비유하는 말" },
+      { id: 87, initial: "ㅊ", word: "침소봉대", hanja: "針小棒大", rawMean: "바늘만한 것을 몽둥이 만하다고 말함이란 뜻으로, 작은 일을 크게 과장하여 말함" },
+      { id: 88, initial: "ㅌ", word: "탁상공론", hanja: "卓上空論", rawMean: "탁자 위에서만 펼치는 헛된 논설이란 뜻으로, 실현성이 없는 허황된 이론을 일컬음" },
+      { id: 89, initial: "ㅌ", word: "토사구팽", hanja: "兎死狗烹", rawMean: "토끼가 죽으면 사냥개는 잡혀서 살아진다는 뜻. 목적을 달성하고 나면 그 목적에 이용된 도구나 사람은 무용하게 되어 배척되거나 제거된다는 의미" },
+      { id: 90, initial: "ㅍ", word: "풍수지탄", hanja: "風樹之歎", rawMean: "바람이 나무를 흔들 듯, 자식이 효도하려 할 때 부모는 이미 죽어 효행을 다하지 못하는 슬픔" },
+      { id: 91, initial: "ㅍ", word: "표리부동", hanja: "表裏不同", rawMean: "겉과 안이 같지 않음. 즉 겉과 속이 다른 음흉한 품성" },
+      { id: 92, initial: "ㅎ", word: "함구무언", hanja: "緘口無言", rawMean: "입을 다물고 아무런 말이 없음" },
+      { id: 93, initial: "ㅎ", word: "허장성세", hanja: "虛張聲勢", rawMean: "헛된 목소리의 기세만 높다는 뜻으로 실력이 없으면서 허세로만 떠벌림" },
+      { id: 94, initial: "ㅎ", word: "호가호위", hanja: "狐假虎威", rawMean: "여우가 호랑이의 위세를 빌려 호기를 부린다는 뜻. 남의 세력을 빌려 위세를 부림" },
+      { id: 95, initial: "ㅎ", word: "혼비백산", hanja: "魂飛魄散", rawMean: "넋이 날아가고 넋이 흩어진다는 뜻으로, 몹시 놀라 어찌할 바를 모름" },
+      { id: 96, initial: "ㅎ", word: "화룡점정", hanja: "畫龍點睛", rawMean: "용을 그린 다음 마지막으로 눈동자를 그린다는 뜻으로 가장 요긴한 부분을 마치어 일을 끝냄을 이르는 말" },
+      { id: 97, initial: "ㅎ", word: "환골탈태", hanja: "換骨奪胎", rawMean: "뼈대를 바꾸어 끼고 태를 바뀌어 쓴다는 뜻. 사람이 보다 나은 방향으로 변하여 전혀 딴사람처럼 됨" },
+      { id: 98, initial: "ㅎ", word: "회자정리", hanja: "會者定離", rawMean: "만나면 언젠가는 헤어지게 되어 있다는 뜻" },
+      { id: 99, initial: "ㅎ", word: "후안무치", hanja: "厚顔無恥", rawMean: "뻔뻔스러워 부끄러워할 줄을 모름" },
+      { id: 100, initial: "ㅎ", word: "흥진비래", hanja: "興盡悲來", rawMean: "즐거운 일이 지나가면 슬픈 일이 닥쳐온다는 뜻" }
+    ];
+
+    // 지문 A/B 자동 분리 함수 (정규표현식 적용)
+    function parseMeanings(raw) {
+      const splitRegex = /(?:라는\s*뜻으로|란\s*뜻으로|라는\s*뜻|란\s*뜻|다는\s*뜻으로|다는\s*뜻|을\s*뜻함|를\s*뜻함|을\s*의미함|를\s*의미함|을\s*이르는\s*말|를\s*이르는\s*말|을\s*비유|를\s*비유|을\s*일컬음|즉|,)/;
+      const parts = raw.split(splitRegex).map(s => s.trim()).filter(s => s.length > 0);
+      
+      if (parts.length >= 2) {
+        return { meanA: parts[0], meanB: parts[1] };
+      }
+      return { meanA: raw, meanB: null };
+    }
+
+    const vocabularyData = rawVocabularyData.map(item => {
+      const { meanA, meanB } = parseMeanings(item.rawMean);
+      return { ...item, meanA, meanB };
+    });
+
+    // Storage Manager
+    const StorageManager = {
+      getStars: () => JSON.parse(localStorage.getItem('ungjung_stars') || '[]'),
+      setStars: (stars) => localStorage.setItem('ungjung_stars', JSON.stringify(stars)),
+      toggleStar: (id) => {
+        let stars = StorageManager.getStars();
+        if (stars.includes(id)) {
+          stars = stars.filter(sId => sId !== id);
+        } else {
+          stars.push(id);
+        }
+        StorageManager.setStars(stars);
+        return stars.includes(id);
+      },
+      getWrongs: () => JSON.parse(localStorage.getItem('ungjung_wrongs') || '[]'),
+      setWrongs: (wrongs) => localStorage.setItem('ungjung_wrongs', JSON.stringify(wrongs)),
+      addWrong: (id) => {
+        let wrongs = StorageManager.getWrongs();
+        if (!wrongs.includes(id)) {
+          wrongs.push(id);
+          StorageManager.setWrongs(wrongs);
+        }
+      },
+      removeWrong: (id) => {
+        let wrongs = StorageManager.getWrongs();
+        wrongs = wrongs.filter(wId => wId !== id);
+        StorageManager.setWrongs(wrongs);
+      }
+    };
+
+    // State Variables
+    let currentQuizList = [];
+    let currentIndex = 0;
+    let score = 0;
+    let selectedInitials = [];
+    let selectedRange = 'all';
+    let selectedMode = 'test';
+    let selectedSort = 'shuffle';
+
+    // UI Elements
+    const screenSetup = document.getElementById('screen-setup');
+    const screenQuiz = document.getElementById('screen-quiz');
+    const exitBtn = document.getElementById('exit-btn');
+    const initialGrid = document.getElementById('initial-grid');
+    const toggleAllBtn = document.getElementById('toggle-all-initials');
+    const startBtn = document.getElementById('start-btn');
+
+    const quizCard = document.getElementById('quiz-card');
+    const meanText = document.getElementById('mean-text');
+    const answerDisplay = document.getElementById('answer-display');
+    const answerWord = document.getElementById('answer-word');
+    const answerHanja = document.getElementById('answer-hanja');
+    const starBtn = document.getElementById('star-btn');
+    const progressBar = document.getElementById('progress-bar');
+    const quizCount = document.getElementById('quiz-count');
+    const badgeInitial = document.getElementById('badge-initial');
+
+    const inputContainer = document.getElementById('input-container');
+    const quizInput = document.getElementById('quiz-input');
+    const submitBtn = document.getElementById('submit-btn');
+
+    const navContainer = document.getElementById('nav-container');
+    const prevBtn = document.getElementById('prev-btn');
+    const revealBtn = document.getElementById('reveal-btn');
+    const nextBtn = document.getElementById('next-btn');
+
+    // Init App
+    function init() {
+      renderInitials();
+      setupOptionEvents();
+    }
+
+    function renderInitials() {
+      const counts = {};
+      vocabularyData.forEach(item => {
+        counts[item.initial] = (counts[item.initial] || 0) + 1;
+      });
+
+      const initials = Object.keys(counts);
+      selectedInitials = [...initials];
+
+      initialGrid.innerHTML = initials.map(init => `
+        <div class="initial-chip">
+          <input type="checkbox" id="init-${init}" value="${init}" checked>
+          <label for="init-${init}">
+            ${init}
+            <span>(${counts[init]}개)</span>
+          </label>
+        </div>
+      `).map(html => html).join('');
+
+      initialGrid.querySelectorAll('input').forEach(chk => {
+        chk.addEventListener('change', () => {
+          if (chk.checked) {
+            selectedInitials.push(chk.value);
+          } else {
+            selectedInitials = selectedInitials.filter(i => i !== chk.value);
+          }
+        });
+      });
+    }
+
+    toggleAllBtn.addEventListener('click', () => {
+      const checkboxes = initialGrid.querySelectorAll('input');
+      const allChecked = Array.from(checkboxes).every(c => c.checked);
+      
+      checkboxes.forEach(c => {
+        c.checked = !allChecked;
+      });
+
+      if (allChecked) {
+        selectedInitials = [];
+        toggleAllBtn.textContent = '모두 선택';
+      } else {
+        selectedInitials = Array.from(checkboxes).map(c => c.value);
+        toggleAllBtn.textContent = '모두 해제';
+      }
+    });
+
+    function setupOptionEvents() {
+      const setupGroup = (containerId, callback) => {
+        const container = document.getElementById(containerId);
+        container.querySelectorAll('.option-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            container.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            callback(btn.dataset.value);
+          });
+        });
+      };
+
+      setupGroup('range-options', val => selectedRange = val);
+      setupGroup('mode-options', val => selectedMode = val);
+      setupGroup('sort-options', val => selectedSort = val);
+    }
+
+    // Start Quiz
+    startBtn.addEventListener('click', () => {
+      if (selectedInitials.length === 0) {
+        alert('최소 하나 이상의 초성을 선택해주세요!');
+        return;
+      }
+
+      let filtered = vocabularyData.filter(item => selectedInitials.includes(item.initial));
+
+      const stars = StorageManager.getStars();
+      const wrongs = StorageManager.getWrongs();
+
+      if (selectedRange === 'star') {
+        filtered = filtered.filter(item => stars.includes(item.id));
+      } else if (selectedRange === 'wrong') {
+        filtered = filtered.filter(item => wrongs.includes(item.id));
+      }
+
+      if (filtered.length === 0) {
+        alert('선택한 조건에 해당하는 한자성어가 없습니다!');
+        return;
+      }
+
+      if (selectedSort === 'shuffle') {
+        filtered.sort(() => Math.random() - 0.5);
+      }
+
+      currentQuizList = filtered;
+      currentIndex = 0;
+      score = 0;
+
+      screenSetup.style.display = 'none';
+      screenQuiz.style.display = 'flex';
+      exitBtn.style.display = 'block';
+
+      if (selectedMode === 'test') {
+        inputContainer.style.display = 'block';
+        navContainer.style.display = 'none';
+      } else {
+        inputContainer.style.display = 'none';
+        navContainer.style.display = 'flex';
+      }
+
+      loadQuizCard();
+    });
+
+    exitBtn.addEventListener('click', () => {
+      if (confirm('학습을 중단하고 메인 화면으로 돌아가시겠습니까?')) {
+        screenQuiz.style.display = 'none';
+        screenSetup.style.display = 'flex';
+        exitBtn.style.display = 'none';
+      }
+    });
+
+    function loadQuizCard() {
+      const item = currentQuizList[currentIndex];
+
+      // Randomly select Meaning A or Meaning B
+      if (item.meanB && Math.random() < 0.5) {
+        meanText.textContent = item.meanB;
+      } else {
+        meanText.textContent = item.meanA;
+      }
+
+      answerWord.textContent = item.word;
+      answerHanja.textContent = item.hanja;
+      badgeInitial.textContent = item.initial;
+
+      quizCount.textContent = `${currentIndex + 1} / ${currentQuizList.length}`;
+      progressBar.style.width = `${((currentIndex + 1) / currentQuizList.length) * 100}%`;
+
+      const stars = StorageManager.getStars();
+      starBtn.classList.toggle('active', stars.includes(item.id));
+
+      answerDisplay.classList.remove('show');
+      quizInput.value = '';
+      quizInput.classList.remove('correct', 'incorrect');
+      quizInput.disabled = false;
+      submitBtn.disabled = false;
+
+      if (selectedMode === 'test') {
+        quizInput.focus();
+      }
+    }
+
+    starBtn.addEventListener('click', () => {
+      const item = currentQuizList[currentIndex];
+      const isStarred = StorageManager.toggleStar(item.id);
+      starBtn.classList.toggle('active', isStarred);
+    });
+
+    // Test Mode logic
+    function handleTestSubmit() {
+      const item = currentQuizList[currentIndex];
+      const userAns = quizInput.value.trim().replace(/\s+/g, '');
+      const realAns = item.word.trim().replace(/\s+/g, '');
+
+      let isCorrect = (userAns === realAns);
+
+      if (isCorrect) {
+        score++;
+        quizInput.classList.add('correct');
+        StorageManager.removeWrong(item.id);
+      } else {
+        quizInput.classList.add('incorrect');
+        StorageManager.addWrong(item.id);
+      }
+
+      answerDisplay.classList.add('show');
+      quizInput.disabled = true;
+      submitBtn.disabled = true;
+
+      // 0.6 sec delay for feedback visibility, then advance
+      setTimeout(() => {
+        if (currentIndex < currentQuizList.length - 1) {
+          currentIndex++;
+          loadQuizCard();
+        } else {
+          showResult();
+        }
+      }, 600);
+    }
+
+    submitBtn.addEventListener('click', handleTestSubmit);
+
+    quizInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        if (!quizInput.disabled) {
+          handleTestSubmit();
+        }
+      }
+    });
+
+    // Swipe Mode logic
+    revealBtn.addEventListener('click', () => {
+      answerDisplay.classList.toggle('show');
+    });
+
+    prevBtn.addEventListener('click', () => {
+      if (currentIndex > 0) {
+        currentIndex--;
+        loadQuizCard();
+      }
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if (currentIndex < currentQuizList.length - 1) {
+        currentIndex++;
+        loadQuizCard();
+      } else {
+        alert('마지막 문제 카드입니다!');
+      }
+    });
+
+    function showResult() {
+      const percentage = Math.round((score / currentQuizList.length) * 100);
+      alert(`🎉 퀴즈 완료!\n\n총 ${currentQuizList.length}문제 중 ${score}개 정답!\n정답률: ${percentage}%`);
+      screenQuiz.style.display = 'none';
+      screenSetup.style.display = 'flex';
+      exitBtn.style.display = 'none';
+    }
+
+    // Initialize Application
+    init();
+  </script>
+</body>
+</html>
